@@ -1,14 +1,12 @@
 package com.example.ystar.recyclerview
 
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_video.view.*
+import kotlinx.android.synthetic.main.activity_main.recycler_view
+import kotlinx.android.synthetic.main.item_video.view.txv_title
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,22 +24,15 @@ class MainActivity : AppCompatActivity() {
         mDataList.addAll(listOf("1", "2", "3", "4", "5", "6", "7"))
         mAdapter = BaseAdapter(R.layout.item_video, mDataList) { view: View, item: String ->
             view.txv_title.text = item
-            view.setOnClickListener { Toast.makeText(this, "click:$item", Toast.LENGTH_SHORT).show() }
+            view.setOnClickListener { "click:$item".toast(this) }
         }
         recycler_view.adapter = mAdapter
         recycler_view.layoutManager = LinearLayoutManager(this)
-        recycler_view.setListener(object : RecyclerListener {
-            override fun loadMore() {
-                Log.e("xxxxx", "loadmore")
-            }
-
-            override fun refresh() {
-                Handler().postDelayed({
-                    swipe_refresh_layout.isRefreshing = false
-                    mDataList.add(0, "add")
-                    mAdapter.refresh(mDataList)
-                }, 3000)
-            }
-        })
+        recycler_view.setOnRefreshListener {
+            it.isRefreshing = false
+        }
+        recycler_view.setOnLoadMoreListener {
+            Log.e("xxxxx", "loadmore")
+        }
     }
 }
