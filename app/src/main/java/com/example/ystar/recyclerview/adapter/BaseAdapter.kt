@@ -1,8 +1,10 @@
-package com.example.ystar.recyclerview
+package com.example.ystar.recyclerview.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import com.example.ystar.recyclerview.viewholder.ViewHolder
+import com.example.ystar.recyclerview.extension.inflate
 
 class BaseAdapter<T>(private val mLayoutId: Int, private val mDataList: MutableList<T>, private val init: (View, T) -> Unit) :
         RecyclerView.Adapter<ViewHolder<T>>() {

@@ -1,4 +1,4 @@
-package com.example.ystar.recyclerview
+package com.example.ystar.recyclerview.recyclerview
 
 import android.content.Context
 import android.support.v4.widget.SwipeRefreshLayout

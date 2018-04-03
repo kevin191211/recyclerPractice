@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.example.ystar.recyclerview.BaseSwipeRefreshLayout
+    <com.example.ystar.recyclerview.recyclerview.BaseSwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </com.example.ystar.recyclerview.BaseSwipeRefreshLayout>
+    </com.example.ystar.recyclerview.recyclerview.BaseSwipeRefreshLayout>
 
 
 </android.support.constraint.ConstraintLayout>

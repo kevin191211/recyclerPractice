@@ -1,4 +1,4 @@
-package com.example.ystar.recyclerview
+package com.example.ystar.recyclerview.adapter
 
 import android.content.Context
 import android.support.v4.util.SparseArrayCompat
@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.ystar.recyclerview.viewholder.ViewHolder
 
 class HeaderAndFooterWrapper<T>(private val mContext: Context, private val mParent: RecyclerView,
         private val mInnerAdapter: RecyclerView.Adapter<ViewHolder<T>>)

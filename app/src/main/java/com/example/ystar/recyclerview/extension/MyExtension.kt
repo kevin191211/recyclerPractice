@@ -1,4 +1,4 @@
-package com.example.ystar.recyclerview
+package com.example.ystar.recyclerview.extension
 
 import android.content.Context
 import android.view.LayoutInflater

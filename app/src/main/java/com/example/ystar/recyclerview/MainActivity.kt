@@ -5,6 +5,12 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
+import com.example.ystar.recyclerview.R.layout
+import com.example.ystar.recyclerview.adapter.BaseAdapter
+import com.example.ystar.recyclerview.adapter.HeaderAndFooterWrapper
+import com.example.ystar.recyclerview.extension.setOnLoadMoreListener
+import com.example.ystar.recyclerview.extension.setOnRefreshListener
+import com.example.ystar.recyclerview.extension.toast
 import kotlinx.android.synthetic.main.activity_main.recycler_view
 import kotlinx.android.synthetic.main.item_footer.view.footer_txv
 import kotlinx.android.synthetic.main.item_header.view.header_txv
@@ -34,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("xxxxx", "loadmore")
         }
 
-        mAdapter = BaseAdapter(R.layout.item_video, mDataList) { view: View, item: String ->
+        mAdapter = BaseAdapter(layout.item_video, mDataList) { view: View, item: String ->
             view.txv_title.text = item
             view.setOnClickListener { "click:$item".toast(this) }
         }
@@ -54,7 +60,5 @@ class MainActivity : AppCompatActivity() {
         }
 
         recycler_view.adapter = mHeaderAndFooterWrapper
-
-
     }
 }
