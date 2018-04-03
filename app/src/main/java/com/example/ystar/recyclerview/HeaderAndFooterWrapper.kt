@@ -1,12 +1,15 @@
 package com.example.ystar.recyclerview
 
+import android.content.Context
 import android.support.v4.util.SparseArrayCompat
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-class HeaderAndFooterWrapper<T>(private val mInnerAdapter: RecyclerView.Adapter<BaseAdapter.ViewHolder<T>>, private val layoutId: Int, private val init: (View, T) -> Unit)
-    : RecyclerView.Adapter<BaseAdapter.ViewHolder<T>>() {
+class HeaderAndFooterWrapper<T>(private val mContext: Context, private val mParent: RecyclerView,
+        private val mInnerAdapter: RecyclerView.Adapter<ViewHolder<T>>)
+    : RecyclerView.Adapter<ViewHolder<T>>() {
 
     companion object {
         private const val BASE_ITEM_TYPE_HEADER = 100000
@@ -17,24 +20,40 @@ class HeaderAndFooterWrapper<T>(private val mInnerAdapter: RecyclerView.Adapter<
     private var mFooterViews: SparseArrayCompat<View> = SparseArrayCompat()
 
     override fun getItemViewType(position: Int): Int {
-        if (isHeaderViewPos(position)){
-            return mHeaderViews.keyAt(position) + BASE_ITEM_TYPE_HEADER
-        } else if (isFooterViewPos(position)){
-            return mFooterViews.keyAt(position) + BASE_ITEM_TYPE_FOOTER
+        return when {
+            isHeaderViewPos(position) -> mHeaderViews.keyAt(position)
+            isFooterViewPos(position) -> mFooterViews.keyAt(position - getHeaderCount() - getRealItemCount())
+            else -> mInnerAdapter.getItemViewType(position - getHeaderCount())
         }
-        return mInnerAdapter.getItemViewType(position - getHeaderCount())
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseAdapter.ViewHolder<T> {
-        if (mHeaderViews.get(viewType) != null) {
-            return BaseAdapter.ViewHolder(parent.inflate(layoutId), init)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<T> {
+        return when {
+            mHeaderViews.get(viewType) != null -> ViewHolder(mHeaderViews[viewType])
+            mFooterViews.get(viewType) != null -> ViewHolder(mFooterViews[viewType])
+            else -> mInnerAdapter.onCreateViewHolder(parent, viewType)
         }
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder<T>, position: Int) {
+        when {
+            isHeaderViewPos(position) -> return
+            isFooterViewPos(position) -> return
+            else -> mInnerAdapter.onBindViewHolder(holder, position - getHeaderCount())
+        }
+    }
+
+    fun <Model> addHeaderView(model: Model, layoutId: Int, init: (View, Model) -> View) {
+        val view = LayoutInflater.from(mContext).inflate(layoutId, mParent, false)
+        mHeaderViews.put(getHeaderCount() + BASE_ITEM_TYPE_HEADER, init(view, model))
+    }
+
+    fun <Model> addFooterView(model: Model, layoutId: Int, init: (View, Model) -> View) {
+        val view = LayoutInflater.from(mContext).inflate(layoutId, mParent, false)
+        mFooterViews.put(getFooterCount() + BASE_ITEM_TYPE_FOOTER, init(view, model))
     }
 
     override fun getItemCount(): Int = getFooterCount() + getHeaderCount() + getRealItemCount()
-
-    override fun onBindViewHolder(holder: BaseAdapter.ViewHolder<T>, position: Int) {
-    }
 
     private fun isHeaderViewPos(position: Int) = position < mHeaderViews.size()
 
