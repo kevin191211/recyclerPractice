@@ -19,11 +19,14 @@ class BaseAdapter<T>(private val mLayoutId: Int, private val mDataList: MutableL
         holder.bindView(mDataList[position])
     }
 
+    fun addAll(dataList: MutableList<T>){
+        mDataList.addAll(dataList)
+    }
+
     fun refresh(dataList: MutableList<T>) {
         val datas = dataList.toMutableList()
         mDataList.clear()
         mDataList.addAll(datas)
-        notifyDataSetChanged()
     }
 }
 
