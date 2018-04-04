@@ -1,13 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/header_txv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:padding="16dp"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        tools:text="txv"/>
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/colorAccent">
+
+    <TextView
+            android:id="@+id/header_txv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            tools:text="txv"/>
+
+    <TextView
+            android:id="@+id/header_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="40dp"
+            android:gravity="center"
+            android:textColor="@color/lightGray"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/header_txv"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="sub_title"/>
+
+</android.support.constraint.ConstraintLayout>

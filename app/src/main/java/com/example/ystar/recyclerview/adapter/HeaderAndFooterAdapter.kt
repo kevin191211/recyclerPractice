@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.ystar.recyclerview.viewholder.ViewHolder
 
-class HeaderAndFooterWrapper<T>(private val mContext: Context, private val mParent: RecyclerView,
+class HeaderAndFooterAdapter<T>(private val mContext: Context, private val mParent: RecyclerView,
         private val mInnerAdapter: RecyclerView.Adapter<ViewHolder<T>>)
     : RecyclerView.Adapter<ViewHolder<T>>() {
 
@@ -44,12 +44,12 @@ class HeaderAndFooterWrapper<T>(private val mContext: Context, private val mPare
         }
     }
 
-    fun <Model> addHeaderView(model: Model, layoutId: Int, init: (View, Model) -> View) {
+    fun <Model> addHeaderView(layoutId: Int, model: Model, init: (View, Model) -> View) {
         val view = LayoutInflater.from(mContext).inflate(layoutId, mParent, false)
         mHeaderViews.put(getHeaderCount() + BASE_ITEM_TYPE_HEADER, init(view, model))
     }
 
-    fun <Model> addFooterView(model: Model, layoutId: Int, init: (View, Model) -> View) {
+    fun <Model> addFooterView(layoutId: Int, model: Model, init: (View, Model) -> View) {
         val view = LayoutInflater.from(mContext).inflate(layoutId, mParent, false)
         mFooterViews.put(getFooterCount() + BASE_ITEM_TYPE_FOOTER, init(view, model))
     }
