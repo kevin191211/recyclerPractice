@@ -22,11 +22,14 @@ import kotlinx.android.synthetic.main.item_video.view.txv_title
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var mBinding: ActivityMainBinding
     private val mDataList: MutableList<String> = arrayListOf()
     private val mPerson by lazy { Person("Kevin", "28") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        mBinding.animal = Animal("Cat", 3)
 
         getData()
         initView()
