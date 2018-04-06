@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView
  * Created by ystar_000 on 2018/4/2.
  */
 
+
+
 fun RecyclerView.setOnRefreshListener(throwSwipeRefreshLayout: (SwipeRefreshLayout) -> Unit) {
     val swipeRefreshLayout = this.parent
     if (swipeRefreshLayout is SwipeRefreshLayout) {

@@ -1,6 +1,7 @@
 package com.example.ystar.recyclerview.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewGroup
 import com.example.ystar.recyclerview.extension.inflate
 import com.example.ystar.recyclerview.viewholder.ViewHolder
@@ -9,7 +10,7 @@ import com.example.ystar.recyclerview.viewholder.ViewHolder
  * Created by ystar_000 on 2018/4/4.
  */
 class LoadMoreAdapter<T>(private val mInnerAdapter: RecyclerView.Adapter<ViewHolder<T>>,
-        private val mLayoutId: Int?, private val loadMore: () -> Unit)
+                         private val mLayoutId: Int?, private val loadMore: (View) -> Unit)
     : RecyclerView.Adapter<ViewHolder<T>>() {
 
     companion object {
@@ -24,7 +25,7 @@ class LoadMoreAdapter<T>(private val mInnerAdapter: RecyclerView.Adapter<ViewHol
 
     override fun onBindViewHolder(holder: ViewHolder<T>, position: Int) =
             when {
-                isShowLoadMoreView(position) -> loadMore()
+                isShowLoadMoreView(position) -> loadMore(holder.itemView)
                 else -> mInnerAdapter.onBindViewHolder(holder, position)
             }
 

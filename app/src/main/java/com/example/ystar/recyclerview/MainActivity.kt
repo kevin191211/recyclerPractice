@@ -3,84 +3,103 @@ package com.example.ystar.recyclerview
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import com.example.ystar.recyclerview.R.layout
 import com.example.ystar.recyclerview.adapter.BaseAdapter
 import com.example.ystar.recyclerview.adapter.HeaderAndFooterAdapter
 import com.example.ystar.recyclerview.adapter.LoadMoreAdapter
-import com.example.ystar.recyclerview.data.Animal
+import com.example.ystar.recyclerview.data.RecyclerViewDataHandler
 import com.example.ystar.recyclerview.databinding.ActivityMainBinding
 import com.example.ystar.recyclerview.extension.setOnRefreshListener
 import com.example.ystar.recyclerview.extension.toast
-import kotlinx.android.synthetic.main.activity_main.recycler_view
-import kotlinx.android.synthetic.main.item_footer.view.footer_txv
-import kotlinx.android.synthetic.main.item_header.view.header_subtitle
-import kotlinx.android.synthetic.main.item_header.view.header_txv
-import kotlinx.android.synthetic.main.item_video.view.txv_title
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.item_footer.view.*
+import kotlinx.android.synthetic.main.item_header.view.*
+import kotlinx.android.synthetic.main.item_load_more.view.*
+import kotlinx.android.synthetic.main.item_video.view.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
     private val mDataList: MutableList<String> = arrayListOf()
     private val mPerson by lazy { Person("Kevin", "28") }
+    private lateinit var mRecyclerViewDataHandler: RecyclerViewDataHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        mBinding.animal = Animal("Cat", 3)
-
-        getData()
         initView()
+        mRecyclerViewDataHandler = RecyclerViewDataHandler(mAdapter.itemCount)
+        mBinding.recyclerViewDataHandler = mRecyclerViewDataHandler
+
+//        Handler().postDelayed({getData()},1000)
     }
 
     private fun getData() {
         for (i in 1..10) {
             mDataList.add(i.toString())
         }
+        mAdapter.addAll(mDataList)
+//        mRecyclerViewDataHandler.adapterItemCounts = mDataList.size
+        mLoadMoreAdapter.notifyDataSetChanged()
     }
 
     private fun initView() {
-
         recycler_view.layoutManager = LinearLayoutManager(this)
-        recycler_view.setOnRefreshListener {
-            "On Refresh".toast(this)
-            Handler().postDelayed({
-                val list: MutableList<String> = arrayListOf()
-                for (i in 1..10) {
-                    list.add(i.toString())
-                }
-                mAdapter.refresh(list)
-                mLoadMoreAdapter.notifyDataSetChanged()
-                it.isRefreshing = false
-            }, 1000)
-        }
+        recycler_view.setOnRefreshListener { onRefresh(it) }
 
         mHeaderAndFooterAdapter.addHeaderView(R.layout.item_header, mPerson) { view: View, item: Person ->
             bindHeaderView(view, item)
             return@addHeaderView view
         }
 
-        mHeaderAndFooterAdapter.addFooterView(R.layout.item_footer, "FooterView") { view: View, item: String ->
-            bindFooterView(view, item)
-            return@addFooterView view
-        }
+//        mHeaderAndFooterAdapter.addFooterView(R.layout.item_footer, "FooterView") { view: View, item: String ->
+//            bindFooterView(view, item)
+//            return@addFooterView view
+//        }
 
         recycler_view.adapter = mLoadMoreAdapter
 
     }
 
+    private fun onRefresh(it: SwipeRefreshLayout) {
+        "On Refresh".toast(this)
+        Handler().postDelayed({
+            val list: MutableList<String> = arrayListOf()
+            for (i in 1..10) {
+                list.add(i.toString())
+            }
+            mAdapter.refresh(list)
+            mLoadMoreAdapter.notifyDataSetChanged()
+            it.isRefreshing = false
+        }, 1000)
+    }
+
     private val mLoadMoreAdapter: LoadMoreAdapter<String> by lazy {
         LoadMoreAdapter(mHeaderAndFooterAdapter, R.layout.item_load_more) {
             "On LoadMore".toast(this)
+            it.progress_bar.visibility = View.VISIBLE
             Handler().postDelayed({
                 val list: MutableList<String> = arrayListOf()
-                for (i in 1..5) {
-                    list.add(i.toString())
+                if (mLoadMoreAdapter.itemCount < 15) {
+                    for (i in 1..5) {
+                        list.add(i.toString())
+                    }
                 }
                 mAdapter.addAll(list)
-                mLoadMoreAdapter.notifyDataSetChanged()
+
+                if (list.isEmpty()) {
+                    it.progress_bar.visibility = View.GONE
+                } else {
+                    Log.e("xxxxx",mAdapter.itemCount.toString())
+                    mRecyclerViewDataHandler.adapterItemCounts = mAdapter.itemCount
+                    mBinding.recyclerViewDataHandler = mRecyclerViewDataHandler
+                    mLoadMoreAdapter.notifyDataSetChanged()
+                }
             }, 1000)
         }
     }

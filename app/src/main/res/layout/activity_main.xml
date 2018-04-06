@@ -2,61 +2,41 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View"/>
         <variable
-                name="animal"
-                type="com.example.ystar.recyclerview.data.Animal"/>
+            name="recyclerViewDataHandler"
+            type="com.example.ystar.recyclerview.data.RecyclerViewDataHandler" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".MainActivity">
-
-        <TextView
-                android:id="@+id/txv_animal_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="@{animal.name}"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                tools:text="Name:animal"/>
-
-        <TextView
-                android:id="@+id/txv_animal_age"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="@{String.valueOf(animal.age)}"
-                android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/txv_animal_name"
-                tools:text="Age:animal"/>
-
-        <View
-                android:id="@+id/line"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/lightGray"
-                app:layout_constraintTop_toBottomOf="@+id/txv_animal_name"/>
+    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
 
         <com.example.ystar.recyclerview.recyclerview.BaseSwipeRefreshLayout
-                android:id="@+id/swipe_refresh_layout"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/line">
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </com.example.ystar.recyclerview.recyclerview.BaseSwipeRefreshLayout>
 
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark"
+            android:visibility="@{recyclerViewDataHandler.adapterItemCounts == 0 ? View.VISIBLE : View.GONE}">
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
 
