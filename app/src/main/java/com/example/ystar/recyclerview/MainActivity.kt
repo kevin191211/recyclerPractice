@@ -12,7 +12,7 @@ import com.example.ystar.recyclerview.R.layout
 import com.example.ystar.recyclerview.adapter.BaseAdapter
 import com.example.ystar.recyclerview.adapter.HeaderAndFooterAdapter
 import com.example.ystar.recyclerview.adapter.LoadMoreAdapter
-import com.example.ystar.recyclerview.data.RecyclerViewDataHandler
+import com.example.ystar.recyclerview.data.MainViewModel
 import com.example.ystar.recyclerview.databinding.ActivityMainBinding
 import com.example.ystar.recyclerview.extension.setOnRefreshListener
 import com.example.ystar.recyclerview.extension.toast
@@ -25,27 +25,17 @@ import kotlinx.android.synthetic.main.item_video.view.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
+    private lateinit var mMainViewModel: MainViewModel
+
     private val mDataList: MutableList<String> = arrayListOf()
     private val mPerson by lazy { Person("Kevin", "28") }
-    private lateinit var mRecyclerViewDataHandler: RecyclerViewDataHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         initView()
-        mRecyclerViewDataHandler = RecyclerViewDataHandler(mAdapter.itemCount)
-        mBinding.recyclerViewDataHandler = mRecyclerViewDataHandler
-
-//        Handler().postDelayed({getData()},1000)
-    }
-
-    private fun getData() {
-        for (i in 1..10) {
-            mDataList.add(i.toString())
-        }
-        mAdapter.addAll(mDataList)
-//        mRecyclerViewDataHandler.adapterItemCounts = mDataList.size
-        mLoadMoreAdapter.notifyDataSetChanged()
+        mMainViewModel = MainViewModel(this, mAdapter.itemCount)
+        mBinding.recyclerViewDataHandler = mMainViewModel
     }
 
     private fun initView() {
@@ -96,8 +86,8 @@ class MainActivity : AppCompatActivity() {
                     it.progress_bar.visibility = View.GONE
                 } else {
                     Log.e("xxxxx",mAdapter.itemCount.toString())
-                    mRecyclerViewDataHandler.adapterItemCounts = mAdapter.itemCount
-                    mBinding.recyclerViewDataHandler = mRecyclerViewDataHandler
+                    mMainViewModel.adapterItemCounts = mAdapter.itemCount
+                    mBinding.recyclerViewDataHandler = mMainViewModel
                     mLoadMoreAdapter.notifyDataSetChanged()
                 }
             }, 1000)
